@@ -26,6 +26,7 @@ extern "C" {
 #define __NEED_uid_t
 #define __NEED_gid_t
 #define __NEED_off_t
+#define __NEED_loff_t
 #define __NEED_pid_t
 #define __NEED_intptr_t
 #define __NEED_useconds_t
@@ -175,7 +176,6 @@ int acct(const char *);
 long syscall(long, ...);
 int execvpe(const char *, char *const [], char *const []);
 int issetugid(void);
-int getentropy(void *, size_t);
 extern int optreset;
 #endif
 
@@ -199,7 +199,7 @@ ssize_t copy_file_range(int, off_t *, int, off_t *, size_t, unsigned);
 #define truncate64 truncate
 #define ftruncate64 ftruncate
 #define lockf64 lockf
-#define off64_t off_t
+#define off64_t loff_t
 #endif
 
 #define POSIX_CLOSE_RESTART     0

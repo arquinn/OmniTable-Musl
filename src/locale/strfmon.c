@@ -94,7 +94,7 @@ ssize_t strfmon(char *restrict s, size_t n, const char *restrict fmt, ...)
 	ssize_t ret;
 
 	va_start(ap, fmt);
-	ret = vstrfmon_l(s, n, CURRENT_LOCALE, fmt, ap);
+	ret = vstrfmon_l(s, n, C_LOCALE, fmt, ap);
 	va_end(ap);
 
 	return ret;

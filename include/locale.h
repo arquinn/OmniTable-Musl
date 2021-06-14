@@ -50,7 +50,6 @@ struct lconv {
 };
 
 
-char *setlocale (int, const char *);
 struct lconv *localeconv(void);
 
 

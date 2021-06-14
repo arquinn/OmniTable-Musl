@@ -4,7 +4,6 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
-#include <pthread.h>
 #include "netlink.h"
 
 #define IFADDRS_HASH_SIZE 64
@@ -89,7 +88,6 @@ struct if_nameindex *if_nameindex()
 	int i;
 	int cs;
 
-	pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &cs);
 	memset(ctx, 0, sizeof(*ctx));
 	if (__rtnetlink_enumerate(AF_UNSPEC, AF_INET, netlink_msg_to_nameindex, ctx) < 0) goto err;
 
@@ -107,7 +105,6 @@ struct if_nameindex *if_nameindex()
 	d->if_index = 0;
 	d->if_name = 0;
 err:
-	pthread_setcancelstate(cs, 0);
 	free(ctx->list);
 	errno = ENOBUFS;
 	return ifs;

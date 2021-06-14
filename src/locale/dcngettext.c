@@ -9,7 +9,6 @@
 #include "locale_impl.h"
 #include "atomic.h"
 #include "pleval.h"
-#include "lock.h"
 
 struct binding {
 	struct binding *next;
@@ -36,7 +35,6 @@ static char *gettextdir(const char *domainname, size_t *dirlen)
 
 char *bindtextdomain(const char *domainname, const char *dirname)
 {
-	static volatile int lock[1];
 	struct binding *p, *q;
 
 	if (!domainname) return 0;
@@ -49,7 +47,6 @@ char *bindtextdomain(const char *domainname, const char *dirname)
 		return 0;
 	}
 
-	LOCK(lock);
 
 	for (p=bindings; p; p=p->next) {
 		if (!strcmp(p->domainname, domainname) &&
@@ -61,7 +58,6 @@ char *bindtextdomain(const char *domainname, const char *dirname)
 	if (!p) {
 		p = calloc(sizeof *p + domlen + dirlen + 2, 1);
 		if (!p) {
-			UNLOCK(lock);
 			return 0;
 		}
 		p->next = bindings;
@@ -80,8 +76,6 @@ char *bindtextdomain(const char *domainname, const char *dirname)
 			a_store(&q->active, 0);
 	}
 
-	UNLOCK(lock);
-	
 	return (char *)p->dirname;
 }
 
@@ -118,7 +112,7 @@ char *dcngettext(const char *domainname, const char *msgid1, const char *msgid2,
 {
 	static struct msgcat *volatile cats;
 	struct msgcat *p;
-	struct __locale_struct *loc = CURRENT_LOCALE;
+	struct __locale_struct *loc = C_LOCALE;
 	const struct __locale_map *lm;
 	size_t domlen;
 	struct binding *q;

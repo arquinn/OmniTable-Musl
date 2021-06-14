@@ -10,7 +10,6 @@ wchar_t *fgetws(wchar_t *restrict s, int n, FILE *restrict f)
 
 	if (!n--) return s;
 
-	FLOCK(f);
 
 	/* Setup a dummy errno so we can detect EILSEQ. This is
 	 * the only way to catch encoding errors in the form of a
@@ -25,7 +24,6 @@ wchar_t *fgetws(wchar_t *restrict s, int n, FILE *restrict f)
 	*p = 0;
 	if (ferror(f) || errno==EILSEQ) p = s;
 
-	FUNLOCK(f);
 
 	return (p == s) ? NULL : s;
 }

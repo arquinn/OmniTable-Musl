@@ -43,6 +43,7 @@ struct meta *alloc_meta(void)
 {
 	struct meta *m;
 	unsigned char *p;
+        fprintf(stderr, "ctx is at %p\, %pn", &ctx, &ctx.init_done);
 	if (!ctx.init_done) {
 #ifndef PAGESIZE
 		ctx.pagesize = get_page_size();

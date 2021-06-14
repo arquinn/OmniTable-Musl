@@ -101,7 +101,6 @@ int vfwscanf(FILE *restrict f, const wchar_t *restrict fmt, va_list ap)
 	const wchar_t *set;
 	size_t i, k;
 
-	FLOCK(f);
 
 	fwide(f, 1);
 
@@ -325,7 +324,6 @@ match_fail:
 			free(wcs);
 		}
 	}
-	FUNLOCK(f);
 	return matches;
 }
 

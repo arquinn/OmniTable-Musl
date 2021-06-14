@@ -1,4 +1,3 @@
-#include "pthread_impl.h"
 #include "syscall.h"
 
 hidden long __syscall_cp_c();

@@ -1,5 +1,4 @@
 #include <time.h>
-#include <pthread.h>
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,7 +14,6 @@ struct tm *getdate(const char *s)
 	char fmt[100], *p;
 	int cs;
 
-	pthread_setcancelstate(PTHREAD_CANCEL_DEFERRED, &cs);
 
 	if (!datemsk) {
 		getdate_err = 1;
@@ -41,6 +39,5 @@ struct tm *getdate(const char *s)
 	else getdate_err = 7;
 out:
 	if (f) fclose(f);
-	pthread_setcancelstate(cs, 0);
 	return ret;
 }

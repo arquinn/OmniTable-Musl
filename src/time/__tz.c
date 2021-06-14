@@ -5,7 +5,6 @@
 #include <string.h>
 #include <sys/mman.h>
 #include "libc.h"
-#include "lock.h"
 
 long  __timezone = 0;
 int   __daylight = 0;
@@ -29,7 +28,6 @@ static char old_tz_buf[32];
 static char *old_tz = old_tz_buf;
 static size_t old_tz_size = sizeof old_tz_buf;
 
-static volatile int lock[1];
 
 static int getint(const char **p)
 {
@@ -347,7 +345,6 @@ static long long rule_to_secs(const int *rule, int year)
 
 void __secs_to_zone(long long t, int local, int *isdst, long *offset, long *oppoff, const char **zonename)
 {
-	LOCK(lock);
 
 	do_tzset();
 
@@ -358,7 +355,6 @@ void __secs_to_zone(long long t, int local, int *isdst, long *offset, long *oppo
 			*offset = (int32_t)zi_read32(types+6*i);
 			*zonename = (const char *)abbrevs + types[6*i+5];
 			if (oppoff) *oppoff = (int32_t)zi_read32(types+6*alt);
-			UNLOCK(lock);
 			return;
 		}
 	}
@@ -390,21 +386,17 @@ std:
 	*offset = -__timezone;
 	if (oppoff) *oppoff = -dst_off;
 	*zonename = __tzname[0];
-	UNLOCK(lock);
 	return;
 dst:
 	*isdst = 1;
 	*offset = -dst_off;
 	if (oppoff) *oppoff = -__timezone;
 	*zonename = __tzname[1];
-	UNLOCK(lock);
 }
 
 static void __tzset()
 {
-	LOCK(lock);
 	do_tzset();
-	UNLOCK(lock);
 }
 
 weak_alias(__tzset, tzset);
@@ -412,11 +404,9 @@ weak_alias(__tzset, tzset);
 const char *__tm_to_tzname(const struct tm *tm)
 {
 	const void *p = tm->__tm_zone;
-	LOCK(lock);
 	do_tzset();
 	if (p != __utc && p != __tzname[0] && p != __tzname[1] &&
 	    (!zi || (uintptr_t)p-(uintptr_t)abbrevs >= abbrevs_end - abbrevs))
 		p = "";
-	UNLOCK(lock);
 	return p;
 }

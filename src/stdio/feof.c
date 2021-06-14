@@ -4,9 +4,7 @@
 
 int feof(FILE *f)
 {
-	FLOCK(f);
 	int ret = !!(f->flags & F_EOF);
-	FUNLOCK(f);
 	return ret;
 }
 

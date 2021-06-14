@@ -12,7 +12,7 @@ size_t __strxfrm_l(char *restrict dest, const char *restrict src, size_t n, loca
 
 size_t strxfrm(char *restrict dest, const char *restrict src, size_t n)
 {
-	return __strxfrm_l(dest, src, n, CURRENT_LOCALE);
+	return __strxfrm_l(dest, src, n, C_LOCALE);
 }
 
 weak_alias(__strxfrm_l, strxfrm_l);

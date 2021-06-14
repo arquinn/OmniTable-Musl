@@ -1,9 +1,9 @@
 #include <errno.h>
-#include "pthread_impl.h"
 
+hidden int static_errno_loc;
 int *__errno_location(void)
 {
-	return &__pthread_self()->errno_val;
+  return &static_errno_loc;
 }
 
 weak_alias(__errno_location, ___errno_location);

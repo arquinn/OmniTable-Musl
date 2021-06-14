@@ -63,7 +63,7 @@ int versionsort(const struct dirent **, const struct dirent **);
 #define scandir64 scandir
 #define alphasort64 alphasort
 #define versionsort64 versionsort
-#define off64_t off_t
+#define off64_t loff_t
 #define ino64_t ino_t
 #define getdents64 getdents
 #endif

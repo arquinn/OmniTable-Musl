@@ -1,4 +1,4 @@
-#
+
 # Makefile for musl (requires GNU make)
 #
 # This is how simple every makefile should be...
@@ -36,7 +36,7 @@ AOBJS = $(LIBC_OBJS)
 LOBJS = $(LIBC_OBJS:.o=.lo)
 GENH = obj/include/bits/alltypes.h obj/include/bits/syscall.h
 GENH_INT = obj/src/internal/version.h
-IMPH = $(addprefix $(srcdir)/, src/internal/stdio_impl.h src/internal/pthread_impl.h src/internal/locale_impl.h src/internal/libc.h)
+IMPH = $(addprefix $(srcdir)/, src/internal/stdio_impl.h src/internal/locale_impl.h src/internal/libc.h)
 
 LDFLAGS =
 LDFLAGS_AUTO =
@@ -61,7 +61,7 @@ GENERIC_INCLUDES = $(wildcard $(srcdir)/arch/generic/bits/*.h)
 INCLUDES = $(wildcard $(srcdir)/include/*.h $(srcdir)/include/*/*.h)
 ALL_INCLUDES = $(sort $(INCLUDES:$(srcdir)/%=%) $(GENH:obj/%=%) $(ARCH_INCLUDES:$(srcdir)/arch/$(ARCH)/%=include/%) $(GENERIC_INCLUDES:$(srcdir)/arch/generic/%=include/%))
 
-EMPTY_LIB_NAMES = m rt pthread crypt util xnet resolv dl
+EMPTY_LIB_NAMES = m rt crypt util xnet resolv dl
 EMPTY_LIBS = $(EMPTY_LIB_NAMES:%=lib/lib%.a)
 CRT_LIBS = $(addprefix lib/,$(notdir $(CRT_OBJS)))
 STATIC_LIBS = lib/libc.a
@@ -107,11 +107,10 @@ obj/src/internal/version.h: $(wildcard $(srcdir)/VERSION $(srcdir)/.git)
 
 obj/src/internal/version.o obj/src/internal/version.lo: obj/src/internal/version.h
 
-obj/crt/rcrt1.o obj/ldso/dlstart.lo obj/ldso/dynlink.lo: $(srcdir)/src/internal/dynlink.h $(srcdir)/arch/$(ARCH)/reloc.h
+obj/crt/rcrt1.o: $(srcdir)/src/internal/dynlink.h $(srcdir)/arch/$(ARCH)/reloc.h
 
-obj/crt/crt1.o obj/crt/scrt1.o obj/crt/rcrt1.o obj/ldso/dlstart.lo: $(srcdir)/arch/$(ARCH)/crt_arch.h
+obj/crt/crt1.o obj/crt/scrt1.o obj/crt/rcrt1.o: $(srcdir)/arch/$(ARCH)/crt_arch.h
 
-obj/crt/rcrt1.o: $(srcdir)/ldso/dlstart.c
 
 obj/crt/Scrt1.o obj/crt/rcrt1.o: CFLAGS_ALL += -fPIC
 
@@ -122,8 +121,8 @@ MEMOPS_OBJS = $(filter %/memcpy.o %/memmove.o %/memcmp.o %/memset.o, $(LIBC_OBJS
 $(MEMOPS_OBJS) $(MEMOPS_OBJS:%.o=%.lo): CFLAGS_ALL += $(CFLAGS_MEMOPS)
 
 NOSSP_OBJS = $(CRT_OBJS) $(LDSO_OBJS) $(filter \
-	%/__libc_start_main.o %/__init_tls.o %/__stack_chk_fail.o \
-	%/__set_thread_area.o %/memset.o %/memcpy.o \
+	%/__libc_start_main.o %/__stack_chk_fail.o \
+	%/memset.o %/memcpy.o \
 	, $(LIBC_OBJS))
 $(NOSSP_OBJS) $(NOSSP_OBJS:%.o=%.lo): CFLAGS_ALL += $(CFLAGS_NOSSP)
 

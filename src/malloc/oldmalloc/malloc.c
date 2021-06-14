@@ -7,7 +7,6 @@
 #include <sys/mman.h>
 #include "libc.h"
 #include "atomic.h"
-#include "pthread_impl.h"
 #include "malloc_impl.h"
 
 #if defined(__GNUC__) && defined(__PIC__)
@@ -166,6 +165,7 @@ static void *__expand_heap(size_t *pn)
 	}
 	n += -n & PAGE_SIZE-1;
 
+        /*
 	if (!brk) {
 		brk = __syscall(SYS_brk, 0);
 		brk += -brk & PAGE_SIZE-1;
@@ -176,7 +176,7 @@ static void *__expand_heap(size_t *pn)
 		*pn = n;
 		brk += n;
 		return (void *)(brk-n);
-	}
+                }*/
 
 	size_t min = (size_t)PAGE_SIZE << mmap_step/2;
 	if (n < min) n = min;

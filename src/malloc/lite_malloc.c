@@ -4,7 +4,6 @@
 #include <errno.h>
 #include <sys/mman.h>
 #include "libc.h"
-#include "lock.h"
 #include "syscall.h"
 
 #define ALIGN 16
@@ -34,7 +33,6 @@ static int traverses_stack_p(uintptr_t old, uintptr_t new)
 static void *__simple_malloc(size_t n)
 {
 	static uintptr_t brk, cur, end;
-	static volatile int lock[1];
 	static unsigned mmap_step;
 	size_t align=1;
 	void *p;
@@ -48,7 +46,6 @@ static void *__simple_malloc(size_t n)
 	while (align<n && align<ALIGN)
 		align += align;
 
-	LOCK(lock);
 
 	cur += -cur & align-1;
 
@@ -86,7 +83,6 @@ static void *__simple_malloc(size_t n)
 			void *mem = __mmap(0, req, PROT_READ|PROT_WRITE,
 				MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
 			if (mem == MAP_FAILED || !new_area) {
-				UNLOCK(lock);
 				return mem==MAP_FAILED ? 0 : mem;
 			}
 			cur = (uintptr_t)mem;
@@ -96,7 +92,6 @@ static void *__simple_malloc(size_t n)
 
 	p = (void *)cur;
 	cur += n;
-	UNLOCK(lock);
 	return p;
 }
 

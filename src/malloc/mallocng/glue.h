@@ -3,14 +3,13 @@
 
 #include <stdint.h>
 #include <sys/mman.h>
-#include <pthread.h>
 #include <unistd.h>
 #include <elf.h>
 #include <string.h>
 #include "atomic.h"
 #include "syscall.h"
 #include "libc.h"
-#include "lock.h"
+
 #include "dynlink.h"
 
 // use macros to appropriately namespace these.
@@ -60,15 +59,12 @@ int __malloc_lock[1];
 
 static inline void rdlock()
 {
-	if (MT) LOCK(__malloc_lock);
 }
 static inline void wrlock()
 {
-	if (MT) LOCK(__malloc_lock);
 }
 static inline void unlock()
 {
-	UNLOCK(__malloc_lock);
 }
 static inline void upgradelock()
 {

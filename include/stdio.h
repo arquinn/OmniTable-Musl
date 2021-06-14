@@ -212,7 +212,7 @@ FILE *fopencookie(void *, const char *, cookie_io_functions_t);
 #define fgetpos64 fgetpos
 #define fsetpos64 fsetpos
 #define fpos64_t fpos_t
-#define off64_t off_t
+#define off64_t loff_t
 #endif
 
 #ifdef __cplusplus

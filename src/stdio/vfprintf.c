@@ -162,12 +162,17 @@ static char *fmt_o(uintmax_t x, char *s)
 	return s;
 }
 
+static const char xdigits[10] = {
+	"0123456789"
+};
+
 static char *fmt_u(uintmax_t x, char *s)
 {
-	unsigned long y;
-	for (   ; x>ULONG_MAX; x/=10) *--s = '0' + x%10;
-	for (y=x;           y; y/=10) *--s = '0' + y%10;
-	return s;
+  // this is clean solution, but relies on libgcc. not sure how to fix (?)
+  unsigned long y;
+  for (   ; x>ULONG_MAX; x/=10) *--s = '0' + x%10;
+  for (y=x;           y; y/=10) *--s = '0' + y%10;
+  return s;
 }
 
 /* Do not override this check. The floating point printing code below
@@ -670,7 +675,6 @@ int vfprintf(FILE *restrict f, const char *restrict fmt, va_list ap)
 		return -1;
 	}
 
-	FLOCK(f);
 	olderr = f->flags & F_ERR;
 	if (f->mode < 1) f->flags &= ~F_ERR;
 	if (!f->buf_size) {
@@ -690,7 +694,6 @@ int vfprintf(FILE *restrict f, const char *restrict fmt, va_list ap)
 	}
 	if (f->flags & F_ERR) ret = -1;
 	f->flags |= olderr;
-	FUNLOCK(f);
 	va_end(ap2);
 	return ret;
 }

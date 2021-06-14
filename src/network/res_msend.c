@@ -9,7 +9,6 @@
 #include <ctype.h>
 #include <unistd.h>
 #include <errno.h>
-#include <pthread.h>
 #include "stdio_impl.h"
 #include "syscall.h"
 #include "lookup.h"
@@ -47,7 +46,6 @@ int __res_msend_rc(int nqueries, const unsigned char *const *queries,
 	struct pollfd pfd;
 	unsigned long t0, t1, t2;
 
-	pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &cs);
 
 	timeout = 1000*conf->timeout;
 	attempts = conf->attempts;
@@ -78,7 +76,6 @@ int __res_msend_rc(int nqueries, const unsigned char *const *queries,
 	}
 	if (fd < 0 || bind(fd, (void *)&sa, sl) < 0) {
 		if (fd >= 0) close(fd);
-		pthread_setcancelstate(cs, 0);
 		return -1;
 	}
 
@@ -86,8 +83,6 @@ int __res_msend_rc(int nqueries, const unsigned char *const *queries,
 	 * yield either no reply (indicated by zero length) or an answer
 	 * packet which is up to the caller to interpret. */
 
-	pthread_cleanup_push(cleanup, (void *)(intptr_t)fd);
-	pthread_setcancelstate(cs, 0);
 
 	/* Convert any IPv4 addresses in a mixed environment to v4-mapped */
 	if (family == AF_INET6) {
@@ -174,7 +169,6 @@ int __res_msend_rc(int nqueries, const unsigned char *const *queries,
 		}
 	}
 out:
-	pthread_cleanup_pop(1);
 
 	return 0;
 }

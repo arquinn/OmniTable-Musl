@@ -7,11 +7,9 @@ weak_alias(dummy, __unlist_locked_file);
 int fclose(FILE *f)
 {
 	int r;
-	
-	FLOCK(f);
+
 	r = fflush(f);
 	r |= f->close(f);
-	FUNLOCK(f);
 
 	/* Past this point, f is closed and any further explict access
 	 * to it is undefined. However, it still exists as an entry in

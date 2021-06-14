@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include "libc.h"
-#include "lock.h"
 
 /* Ensure that at least 32 atexit handlers can be registered without malloc */
 #define COUNT 32
@@ -14,18 +13,14 @@ static struct fl
 } builtin, *head;
 
 static int slot;
-static volatile int lock[1];
 
 void __funcs_on_exit()
 {
 	void (*func)(void *), *arg;
-	LOCK(lock);
 	for (; head; head=head->next, slot=COUNT) while(slot-->0) {
 		func = head->f[slot];
 		arg = head->a[slot];
-		UNLOCK(lock);
 		func(arg);
-		LOCK(lock);
 	}
 }
 
@@ -35,7 +30,6 @@ void __cxa_finalize(void *dso)
 
 int __cxa_atexit(void (*func)(void *), void *arg, void *dso)
 {
-	LOCK(lock);
 
 	/* Defer initialization of head so it can be in BSS */
 	if (!head) head = &builtin;
@@ -44,7 +38,6 @@ int __cxa_atexit(void (*func)(void *), void *arg, void *dso)
 	if (slot==COUNT) {
 		struct fl *new_fl = calloc(sizeof(struct fl), 1);
 		if (!new_fl) {
-			UNLOCK(lock);
 			return -1;
 		}
 		new_fl->next = head;
@@ -57,7 +50,6 @@ int __cxa_atexit(void (*func)(void *), void *arg, void *dso)
 	head->a[slot] = arg;
 	slot++;
 
-	UNLOCK(lock);
 	return 0;
 }
 

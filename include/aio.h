@@ -59,7 +59,7 @@ int lio_listio(int, struct aiocb *__restrict const *__restrict, int, struct sige
 #define aio_suspend64 aio_suspend
 #define aio_fsync64 aio_fsync
 #define lio_listio64 lio_listio
-#define off64_t off_t
+#define off64_t loff_t
 #endif
 
 #if _REDIR_TIME64

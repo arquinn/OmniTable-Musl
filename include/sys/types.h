@@ -76,7 +76,7 @@ typedef unsigned long long u_quad_t;
 #define fsblkcnt64_t fsblkcnt_t
 #define fsfilcnt64_t fsfilcnt_t
 #define ino64_t ino_t
-#define off64_t off_t
+#define off64_t loff_t
 #endif
 
 #ifdef __cplusplus

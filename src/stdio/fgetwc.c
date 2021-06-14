@@ -47,7 +47,7 @@ static wint_t __fgetwc_unlocked_internal(FILE *f)
 
 wint_t __fgetwc_unlocked(FILE *f)
 {
-	locale_t *ploc = &CURRENT_LOCALE, loc = *ploc;
+	locale_t *ploc = C_LOCALE, loc = *ploc;
 	if (f->mode <= 0) fwide(f, 1);
 	*ploc = f->locale;
 	wchar_t wc = __fgetwc_unlocked_internal(f);
@@ -58,9 +58,7 @@ wint_t __fgetwc_unlocked(FILE *f)
 wint_t fgetwc(FILE *f)
 {
 	wint_t c;
-	FLOCK(f);
 	c = __fgetwc_unlocked(f);
-	FUNLOCK(f);
 	return c;
 }
 

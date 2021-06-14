@@ -6,7 +6,6 @@ char *fgetln(FILE *f, size_t *plen)
 {
 	char *ret = 0, *z;
 	ssize_t l;
-	FLOCK(f);
 	ungetc(getc_unlocked(f), f);
 	if (f->rend && (z=memchr(f->rpos, '\n', f->rend - f->rpos))) {
 		ret = (char *)f->rpos;
@@ -16,6 +15,5 @@ char *fgetln(FILE *f, size_t *plen)
 		*plen = l;
 		ret = f->getln_buf;
 	}
-	FUNLOCK(f);
 	return ret;
 }

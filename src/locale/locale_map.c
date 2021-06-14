@@ -3,7 +3,6 @@
 #include <sys/mman.h>
 #include "locale_impl.h"
 #include "libc.h"
-#include "lock.h"
 
 const char *__lctrans_impl(const char *msg, const struct __locale_map *lm)
 {
@@ -23,7 +22,6 @@ static const char envvars[][12] = {
 
 const struct __locale_map *__get_locale(int cat, const char *val)
 {
-	static volatile int lock[1];
 	static void *volatile loc_head;
 	const struct __locale_map *p;
 	struct __locale_map *new = 0;
@@ -54,11 +52,9 @@ const struct __locale_map *__get_locale(int cat, const char *val)
 	for (p=loc_head; p; p=p->next)
 		if (!strcmp(val, p->name)) return p;
 
-	LOCK(lock);
 
 	for (p=loc_head; p; p=p->next)
 		if (!strcmp(val, p->name)) {
-			UNLOCK(lock);
 			return p;
 		}
 
@@ -108,6 +104,5 @@ const struct __locale_map *__get_locale(int cat, const char *val)
 	 * requested name was "C" or "POSIX". */
 	if (!new && cat == LC_CTYPE) new = (void *)&__c_dot_utf8;
 
-	UNLOCK(lock);
 	return new;
 }
