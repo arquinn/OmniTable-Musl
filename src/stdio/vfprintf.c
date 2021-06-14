@@ -162,9 +162,9 @@ static char *fmt_o(uintmax_t x, char *s)
 	return s;
 }
 
-static const char xdigits[10] = {
-	"0123456789"
-};
+//static const char xdigits[10] = {
+//	"0123456789"
+//};
 
 static char *fmt_u(uintmax_t x, char *s)
 {
