@@ -12,12 +12,12 @@ ssize_t getdelim(char **restrict s, size_t *restrict n, int delim, FILE *restric
 	size_t i=0;
 	int c;
 
-	FLOCK(f);
+	
 
 	if (!n || !s) {
 		f->mode |= f->mode-1;
 		f->flags |= F_ERR;
-		FUNLOCK(f);
+		
 		errno = EINVAL;
 		return -1;
 	}
@@ -47,7 +47,7 @@ ssize_t getdelim(char **restrict s, size_t *restrict n, int delim, FILE *restric
 					f->rpos += k;
 					f->mode |= f->mode-1;
 					f->flags |= F_ERR;
-					FUNLOCK(f);
+					
 					errno = ENOMEM;
 					return -1;
 				}
@@ -61,7 +61,7 @@ ssize_t getdelim(char **restrict s, size_t *restrict n, int delim, FILE *restric
 		if (z) break;
 		if ((c = getc_unlocked(f)) == EOF) {
 			if (!i || !feof(f)) {
-				FUNLOCK(f);
+				
 				return -1;
 			}
 			break;
@@ -73,7 +73,7 @@ ssize_t getdelim(char **restrict s, size_t *restrict n, int delim, FILE *restric
 	}
 	(*s)[i] = 0;
 
-	FUNLOCK(f);
+	
 
 	return i;
 }

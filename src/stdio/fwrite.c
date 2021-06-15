@@ -29,9 +29,9 @@ size_t fwrite(const void *restrict src, size_t size, size_t nmemb, FILE *restric
 {
 	size_t k, l = size*nmemb;
 	if (!size) nmemb = 0;
-	FLOCK(f);
+	
 	k = __fwritex(src, l, f);
-	FUNLOCK(f);
+	
 	return k==l ? nmemb : k/size;
 }
 

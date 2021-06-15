@@ -9,7 +9,7 @@ size_t fread(void *restrict destv, size_t size, size_t nmemb, FILE *restrict f)
 	size_t len = size*nmemb, l = len, k;
 	if (!size) nmemb = 0;
 
-	FLOCK(f);
+	
 
 	f->mode |= f->mode-1;
 
@@ -26,12 +26,12 @@ size_t fread(void *restrict destv, size_t size, size_t nmemb, FILE *restrict f)
 	for (; l; l-=k, dest+=k) {
 		k = __toread(f) ? 0 : f->read(f, dest, l);
 		if (!k) {
-			FUNLOCK(f);
+			
 			return (len-l)/size;
 		}
 	}
 
-	FUNLOCK(f);
+	
 	return nmemb;
 }
 

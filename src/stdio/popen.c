@@ -31,7 +31,7 @@ FILE *popen(const char *cmd, const char *mode)
 		__syscall(SYS_close, p[1]);
 		return NULL;
 	}
-	FLOCK(f);
+	
 
 	/* If the child's end of the pipe happens to already be on the final
 	 * fd number to which it will be assigned (either 0 or 1), it must
@@ -58,7 +58,7 @@ FILE *popen(const char *cmd, const char *mode)
 				if (!strchr(mode, 'e'))
 					fcntl(p[op], F_SETFD, 0);
 				__syscall(SYS_close, p[1-op]);
-				FUNLOCK(f);
+				
 				return f;
 			}
 		}

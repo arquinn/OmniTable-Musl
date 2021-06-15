@@ -74,7 +74,7 @@ int vfscanf(FILE *restrict f, const char *restrict fmt, va_list ap)
 	size_t i, k;
 	wchar_t wc;
 
-	FLOCK(f);
+	
 
 	if (!f->rpos) __toread(f);
 	if (!f->rpos) goto input_fail;
@@ -332,7 +332,7 @@ match_fail:
 			free(wcs);
 		}
 	}
-	FUNLOCK(f);
+	
 	return matches;
 }
 

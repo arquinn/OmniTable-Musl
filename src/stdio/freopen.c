@@ -15,7 +15,7 @@ FILE *freopen(const char *restrict filename, const char *restrict mode, FILE *re
 	int fl = __fmodeflags(mode);
 	FILE *f2;
 
-	FLOCK(f);
+	
 
 	fflush(f);
 
@@ -40,7 +40,7 @@ FILE *freopen(const char *restrict filename, const char *restrict mode, FILE *re
 		fclose(f2);
 	}
 
-	FUNLOCK(f);
+	
 	return f;
 
 fail2:

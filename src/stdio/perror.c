@@ -8,7 +8,7 @@ void perror(const char *msg)
 	FILE *f = stderr;
 	char *errstr = strerror(errno);
 
-	FLOCK(f);
+	
 
 	/* Save stderr's orientation and encoding rule, since perror is not
 	 * permitted to change them. */
@@ -26,5 +26,5 @@ void perror(const char *msg)
 	f->mode = old_mode;
 	f->locale = old_locale;
 
-	FUNLOCK(f);
+	
 }

@@ -17,12 +17,12 @@ void __getopt_msg(const char *a, const char *b, const char *c, size_t l)
 {
 	FILE *f = stderr;
 	b = __lctrans_cur(b);
-	FLOCK(f);
+	
 	fputs(a, f)>=0
 	&& fwrite(b, strlen(b), 1, f)
 	&& fwrite(c, 1, l, f)==l
 	&& putc('\n', f);
-	FUNLOCK(f);
+	
 }
 
 int getopt(int argc, char * const argv[], const char *optstring)
