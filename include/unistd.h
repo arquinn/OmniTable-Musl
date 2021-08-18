@@ -197,7 +197,9 @@ ssize_t copy_file_range(int, off_t *, int, off_t *, size_t, unsigned);
 #define pread64 pread
 #define pwrite64 pwrite
 #define truncate64 truncate
-#define ftruncate64 ftruncate
+  // #define ftruncate64 ftruncate ftruncate64 is decidedly NOT ftruncate!?
+  // it's a different fucking header, why have it as the same here??
+int ftruncate64(int, loff_t);
 #define lockf64 lockf
 #define off64_t loff_t
 #endif

@@ -54,5 +54,4 @@ void *__mmap64(void *start, size_t len, int prot, int flags, int fd, loff_t off)
   return (void *)__syscall_ret(ret);
 }
 
-
 weak_alias(__mmap64, mmap64);

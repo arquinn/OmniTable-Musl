@@ -9,7 +9,7 @@ extern "C" {
 #define __NEED_mode_t
 #define __NEED_size_t
 #define __NEED_off_t
-
+#define __NEED_loff_t
 #if defined(_GNU_SOURCE)
 #define __NEED_ssize_t
 #endif
@@ -140,8 +140,9 @@ int shm_open (const char *, int, mode_t);
 int shm_unlink (const char *);
 
 #if defined(_LARGEFILE64_SOURCE) || defined(_GNU_SOURCE)
-#define mmap64 mmap
 #define off64_t loff_t
+  void *mmap64(void *start, size_t len, int prot, int flags, int fd, loff_t off);
+
 #endif
 
 #ifdef __cplusplus
